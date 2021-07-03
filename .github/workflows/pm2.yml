@@ -14,5 +14,4 @@ jobs:
         run: |
           export DOCKER_CLI_EXPERIMENTAL=enabled
           docker build -t treehouses/pm2 .
-          docker images
           docker push treehouses/pm2
