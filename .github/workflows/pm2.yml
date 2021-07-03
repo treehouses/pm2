@@ -3,7 +3,7 @@ name: pm2
 on: [push]
 
 jobs:
-  build-deploy-pm2:
+  pm2:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
