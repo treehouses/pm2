@@ -30,8 +30,8 @@ jobs:
           deploy_image "$repo" amd64
           deploy_image "$repo" arm
           deploy_image "$repo" arm64
-          sudo npm install -g @treehouses/cli
-          export gitter_channel="${{ secrets.CHANNEL }}"
+          # sudo npm install -g @treehouses/cli
+          # export gitter_channel="${{ secrets.CHANNEL }}"
           echo "tags"
           tag="$(date +%Y%m%d%H%M)"
           echo $tag
