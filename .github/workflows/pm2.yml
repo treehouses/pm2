@@ -23,39 +23,10 @@ jobs:
           export DOCKER_CLI_EXPERIMENTAL=enabled
           repo="treehouses/pm2"
           source .github/workflows/utils.sh
-          node_arm_sha=$(get_manifest_sha "treehouses/node:latest" "arm")
-          echo "node arm"
-          echo $node_arm_sha
-          pm2_arm_sha=$(get_manifest_sha "keymetrics/pm2:latest" "arm")
-          echo "pm2 arm"
-          echo $pm2_arm_sha
-          flag_arm=$(is_base "treehouses/node@"$node_arm_sha "keymetrics/pm2@"$pm2_arm_sha)
-          echo "flag arm"
-          echo $flag_arm
-          node_amd64_sha=$(get_manifest_sha "treehouses/node:latest" "amd64")
-          echo $node_amd64_sha
-          pm2_amd64_sha=$(get_manifest_sha "keymetrics/pm2:latest" "amd64")
-          echo $pm2_amd64_sha
-          flag_amd64=$(is_base "treehouses/node@"$node_amd64_sha "keymetrics/pm2@"$pm2_amd64_sha)
-          echo "flag amd64"
-          echo $flag_amd64
-          node_arm64_sha=$(get_manifest_sha "treehouses/node:latest" "arm64")
-          echo "node arm64"
-          echo $node_arm64_sha
-          pm2_arm64_sha=$(get_manifest_sha "keymetrics/pm2:latest" "arm64")
-          echo "pm2 arm64"
-          echo $pm2_arm64_sha
-          flag_arm64=$(is_base "treehouses/node@"$node_arm64_sha "keymetrics/pm2@"$pm2_arm64_sha)
-          echo "flag arm64"
-          echo $flag_arm64
-          version2=$(image_version keymetrics/pm2:latest)
-          echo "repo version is $version2"
           docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
           build_image "treehouses/node:latest" arm "$repo"
           build_image "treehouses/node:latest" amd64 "$repo"
           build_image "treehouses/node:latest" arm64 "$repo"
-          flag=$(compare "treehouses/node@"$node_arm_sha "pm2@"$pm2_arm_sha "treehouses/node@"$node_amd64_sha "pm2@"$pm2_amd64_sha "treehouses/node@"$node_arm64_sha "pm2@"$pm2_arm64_sha "pm2" "pm2-tags:amd64")
-          echo $flag
           deploy_image "$repo" arm
           deploy_image "$repo" amd64
           deploy_image "$repo" arm64
