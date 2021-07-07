@@ -4,14 +4,22 @@ on: [push]
 
 jobs:
   pm2:
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [armv7, arm64, amd64]
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: login to docker
         run: docker login -u ${{ secrets.DOCKERUSERNAME }} -p ${{ secrets.DOCKERAPIKEY }}
-      - name: building pm2 and deploying to docker
+      - name: building pm2 
         run: |
           export DOCKER_CLI_EXPERIMENTAL=enabled
-          docker build -t treehouses/pm2 .
-          docker push treehouses/pm2
+          docker buildx build --platform linux/${{ matrix.arch }} -t treehouses/pm2 .
+          docker push treehouses/pm2:${{ matrix.arch }}
+      - name: deploying to docker
+        run: |
+          docker manifest create treehouses/pm2:latest treehouses/pm2:amd64 treehouses/pm2:armv7 treehouses/pm2:arm64
+          docker manifest push treehouses/pm2:latest
