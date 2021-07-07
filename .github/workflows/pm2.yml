@@ -1,6 +1,14 @@
-name: pm2
+name: pm2 build on change
 
-on: [push]
+on: 
+  push:
+    branches:
+      - master
+      - main
+      - adding-multiarch
+    workflow_dispatch:
+    repository_dispatch:
+      types: pm2 
 
 jobs:
   pm2:
