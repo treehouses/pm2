@@ -21,5 +21,23 @@ jobs:
       - name: building pm2 and deploying to docker
         run: |
           export DOCKER_CLI_EXPERIMENTAL=enabled
-          docker build -t treehouses/pm2 .
-          docker push treehouses/pm2
+          repo="treehouses/pm2"
+          source .github/workflows/utils.sh
+          docker run --privileged --rm docker/binfmt:a7996909642ee92942dcd6cff44b9b95f08dad64
+          build_image "treehouses/node:latest" amd64 "$repo"
+          build_image "treehouses/node:latest" arm "$repo"
+          build_image "treehouses/node:latest" arm64 "$repo"
+          deploy_image "$repo" amd64
+          deploy_image "$repo" arm
+          deploy_image "$repo" arm64
+          sudo npm install -g @treehouses/cli
+          export gitter_channel="${{ secrets.CHANNEL }}"
+          echo "tags"
+          tag="$(date +%Y%m%d%H%M)"
+          echo $tag
+          tag="latest"
+          echo $tag2
+          docker manifest create $repo:$tag  $repo:$tag2 $repo:amd64 $repo:arm $repo:arm64
+          #docker manifest create $repo:$tag $repo-tags:amd64 $repo-tags:arm $repo-tags:arm64
+
+          
