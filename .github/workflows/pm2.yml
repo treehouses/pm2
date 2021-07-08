@@ -29,5 +29,5 @@ jobs:
       - name: deploying to docker
         run: |
           docker manifest create treehouses/pm2:latest treehouses/pm2:amd64 treehouses/pm2:arm treehouses/pm2:arm64
-          docker manifest annotate $repo:latest treehouses/pm2:arm --arch arm
+          docker manifest annotate treehouses/pm2:latest treehouses/pm2:arm --arch arm
           docker manifest push treehouses/pm2:latest
