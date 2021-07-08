@@ -23,7 +23,6 @@ jobs:
   pm2-manifest:
     needs: pm2-build
     runs-on: ubuntu-20.04
-    runs-on: ubuntu-20.04
     steps:
       - name: login to docker
         run: docker login -u ${{ secrets.DOCKERUSERNAME }} -p ${{ secrets.DOCKERAPIKEY }}
