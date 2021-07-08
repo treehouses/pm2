@@ -17,6 +17,7 @@ jobs:
       - name: building pm2 
         run: |
           export DOCKER_CLI_EXPERIMENTAL=enabled
+          docker run --privileged --rm docker/binfmt:a7996909642ee92942dcd6cff44b9b95f08dad64
           docker buildx build --platform linux/${{ matrix.arch }} -t treehouses/pm2 .
           docker push treehouses/pm2:${{ matrix.arch }}
       - name: deploying to docker
