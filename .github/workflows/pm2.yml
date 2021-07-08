@@ -7,7 +7,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: [armv7, arm64, amd64]
+        arch: [arm, arm64, amd64]
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
@@ -18,9 +18,9 @@ jobs:
         run: |
           export DOCKER_CLI_EXPERIMENTAL=enabled
           docker run --privileged --rm docker/binfmt:a7996909642ee92942dcd6cff44b9b95f08dad64
-          docker buildx build --platform linux/${{ matrix.arch }} -t treehouses/pm2 .
+          docker buildx build --platform linux/${{ matrix.arch }} -t treehouses/pm2:${{ matrix.arch }} .
           docker push treehouses/pm2:${{ matrix.arch }}
       - name: deploying to docker
         run: |
-          docker manifest create treehouses/pm2:latest treehouses/pm2:amd64 treehouses/pm2:armv7 treehouses/pm2:arm64
+          docker manifest create treehouses/pm2:latest treehouses/pm2:amd64 treehouses/pm2:arm treehouses/pm2:arm64
           docker manifest push treehouses/pm2:latest
