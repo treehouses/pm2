@@ -60,6 +60,8 @@ jobs:
             deploy_image "$repo" arm
             deploy_image "$repo" amd64
             deploy_image "$repo" arm64
+            sudo npm install -g @treehouses/cli
+            export gitter_channel="${{ secrets.CHANNEL }}"
             tag=$(date +%Y%m%d%H%M)
             tag2="latest"
             echo $tag
@@ -67,6 +69,8 @@ jobs:
             docker manifest inspect $repo:$tag
             docker manifest inspect $repo:$tag2
             docker manifest push $repo:$tag; docker manifest push $repo:$tag2
+            echo "https://hub.docker.com/r/treehouses/pm2/tags"
+            treehouses feedback "new treehouses/pm2 check https://hub.docker.com/r/treehouses/pm2/tags"
           else
             echo "no changes"
           fi
