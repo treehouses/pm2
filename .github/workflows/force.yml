@@ -17,50 +17,51 @@ jobs:
         uses: actions/checkout@v2
       - name: login to docker
         run: docker login -u ${{ secrets.DOCKERUSERNAME }} -p ${{ secrets.DOCKERAPIKEY }}
-      - name: building pm2 and deploying to docker
+      - name: treehouses pm2
         run: |
           export DOCKER_CLI_EXPERIMENTAL=enabled
           repo="treehouses/pm2"
+          base="treehouses/node"
           source .github/workflows/utils.sh
-          node_arm_sha=$(get_manifest_sha "treehouses/node:latest" "arm")
-          echo "node arm"
-          echo $node_arm_sha
-          # pm2_arm_sha=$(get_manifest_sha "keymetrics/pm2:latest" "arm")
-          # echo "pm2 arm"
-          # echo $pm2_arm_sha
-          # flag_arm=$(is_base "treehouses/node@"$node_arm_sha "keymetrics/pm2@"$pm2_arm_sha)
-          # echo "flag arm"
-          # echo $flag_arm
-          node_amd64_sha=$(get_manifest_sha "treehouses/node:latest" "amd64")
-          echo $node_amd64_sha
-          # pm2_amd64_sha=$(get_manifest_sha "keymetrics/pm2:latest" "amd64")
-          # echo $pm2_amd64_sha
-          # flag_amd64=$(is_base "treehouses/node@"$node_amd64_sha "keymetrics/pm2@"$pm2_amd64_sha)
+          echo "amd64"
+          baseamd64=$(get_manifest_sha "$base:latest" "amd64")
+          echo $baseamd64
+          # repoamd64=$(get_manifest_sha "$repo:latest" "amd64")
+          # echo $repoamd64
           # echo "flag amd64"
+          # flag_amd64=$(is_base "$base@"$baseamd64 "$repo@"$repoamd64)
           # echo $flag_amd64
-          node_arm64_sha=$(get_manifest_sha "treehouses/node:latest" "arm64")
-          echo "node arm64"
-          echo $node_arm64_sha
-          # pm2_arm64_sha=$(get_manifest_sha "keymetrics/pm2:latest" "arm64")
-          # echo "pm2 arm64"
-          # echo $pm2_arm64_sha
-          # flag_arm64=$(is_base "treehouses/node@"$node_arm64_sha "keymetrics/pm2@"$pm2_arm64_sha)
+          echo "arm"
+          basearm=$(get_manifest_sha "$base:latest" "arm")
+          echo $basearm
+          # repoarm=$(get_manifest_sha "$repo:latest" "arm")
+          # echo $repoarm
+          # flagarm=$(is_base "$base@"$basearm "$repo@"$repoarm)
+          # echo "flag arm"
+          # echo $flagarm
+          echo "arm64"
+          basearm64=$(get_manifest_sha "$base:latest" "arm64")
+          echo $basearm64
+          # repoarm64=$(get_manifest_sha "$repo:latest" "arm64")
+          # echo $repoarm64
           # echo "flag arm64"
-          # echo $flag_arm64
-          # version2=$(image_version keymetrics/pm2:latest)
-          # echo "repo version is $version2"
-          flag=true #$(compare "treehouses/node@"$node_arm_sha "pm2@"$pm2_arm_sha "treehouses/node@"$node_amd64_sha "pm2@"$pm2_amd64_sha "treehouses/node@"$node_arm64_sha "pm2@"$pm2_arm64_sha "pm2" "pm2-tags:amd64")
+          # flagarm64=$(is_base "$base@"$basearm64 "$repo@"$repoarm64)
+          # echo $flagarm64
+          version2=$(image_version $repo:latest)
+          echo "repo version is $version2"
+          flag=true #$(compare "$base@"$basearm "$repo@"$repoarm "$base@"$baseamd64 "$repo@"$repoamd64 "$base@"$basearm64 "$repo@"$repoarm64 "$repo" "$repo-tags:amd64")
           echo $flag
           if [[ $flag == true ]]; then
             docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-            build_image "treehouses/node:latest" arm "$repo"
-            build_image "treehouses/node:latest" amd64 "$repo"
-            build_image "treehouses/node:latest" arm64 "$repo"
+            build_image "$base:latest" arm "$repo"
+            build_image "$base:latest" amd64 "$repo"
+            build_image "$base:latest" arm64 "$repo"
             deploy_image "$repo" arm
             deploy_image "$repo" amd64
             deploy_image "$repo" arm64
             sudo npm install -g @treehouses/cli
             export gitter_channel="${{ secrets.CHANNEL }}"
+            echo "tags"
             tag=$(date +%Y%m%d%H%M)
             tag2="latest"
             echo $tag
