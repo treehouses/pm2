@@ -1,13 +1,13 @@
-name: build on change
+name: build by force
 
 on: 
-  push:
-    branches:
-      - master
-      - main
+  # push:
+  #   branches:
+  #     - master
+  #     - main
     workflow_dispatch:
-    repository_dispatch:
-      types: pm2 
+    # repository_dispatch:
+    #   types: pm2 
 
 jobs:
   pm2:
@@ -26,30 +26,30 @@ jobs:
           echo "amd64"
           baseamd64=$(get_manifest_sha "$base:latest" "amd64")
           echo $baseamd64
-          repoamd64=$(get_manifest_sha "$repo:latest" "amd64")
-          echo $repoamd64
-          echo "flag amd64"
-          flag_amd64=$(is_base "$base@"$baseamd64 "$repo@"$repoamd64)
-          echo $flag_amd64
+          # repoamd64=$(get_manifest_sha "$repo:latest" "amd64")
+          # echo $repoamd64
+          # echo "flag amd64"
+          # flag_amd64=$(is_base "$base@"$baseamd64 "$repo@"$repoamd64)
+          # echo $flag_amd64
           echo "arm"
           basearm=$(get_manifest_sha "$base:latest" "arm")
           echo $basearm
-          repoarm=$(get_manifest_sha "$repo:latest" "arm")
-          echo $repoarm
-          flagarm=$(is_base "$base@"$basearm "$repo@"$repoarm)
-          echo "flag arm"
-          echo $flagarm
+          # repoarm=$(get_manifest_sha "$repo:latest" "arm")
+          # echo $repoarm
+          # flagarm=$(is_base "$base@"$basearm "$repo@"$repoarm)
+          # echo "flag arm"
+          # echo $flagarm
           echo "arm64"
           basearm64=$(get_manifest_sha "$base:latest" "arm64")
           echo $basearm64
-          repoarm64=$(get_manifest_sha "$repo:latest" "arm64")
-          echo $repoarm64
-          echo "flag arm64"
-          flagarm64=$(is_base "$base@"$basearm64 "$repo@"$repoarm64)
-          echo $flagarm64
+          # repoarm64=$(get_manifest_sha "$repo:latest" "arm64")
+          # echo $repoarm64
+          # echo "flag arm64"
+          # flagarm64=$(is_base "$base@"$basearm64 "$repo@"$repoarm64)
+          # echo $flagarm64
           version2=$(image_version $repo:latest)
           echo "repo version is $version2"
-          flag=$(compare "$base@"$basearm "$repo@"$repoarm "$base@"$baseamd64 "$repo@"$repoamd64 "$base@"$basearm64 "$repo@"$repoarm64 "$repo" "$repo-tags:amd64")
+          flag=true #$(compare "$base@"$basearm "$repo@"$repoarm "$base@"$baseamd64 "$repo@"$repoamd64 "$base@"$basearm64 "$repo@"$repoarm64 "$repo" "$repo-tags:amd64")
           echo $flag
           if [[ $flag == true ]]; then
             docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
