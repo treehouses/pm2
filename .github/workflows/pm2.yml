@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - main
+      - fix-docker-push
     workflow_dispatch:
     repository_dispatch:
       types: pm2 
