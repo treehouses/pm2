@@ -47,15 +47,13 @@ jobs:
           echo "flag arm64"
           flagarm64=$(is_base "$base@"$basearm64 "$repo@"$repoarm64)
           echo $flagarm64
-          version2=$(image_version $repo:latest)
-          echo "repo version is $version2"
+          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+          build_image "$base:latest" arm "$repo"
+          build_image "$base:latest" amd64 "$repo"
+          build_image "$base:latest" arm64 "$repo"
           flag=$(compare "$base@"$basearm "$repo@"$repoarm "$base@"$baseamd64 "$repo@"$repoamd64 "$base@"$basearm64 "$repo@"$repoarm64 "$repo" "$repo-tags:amd64")
           echo $flag
           if [[ $flag == true ]]; then
-            docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-            build_image "$base:latest" arm "$repo"
-            build_image "$base:latest" amd64 "$repo"
-            build_image "$base:latest" arm64 "$repo"
             deploy_image "$repo" arm
             deploy_image "$repo" amd64
             deploy_image "$repo" arm64
