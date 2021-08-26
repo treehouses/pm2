@@ -5,7 +5,6 @@ on:
     branches:
       - master
       - main
-      - new-workflow
   workflow_dispatch:
     inputs:
       buildtype:
@@ -45,7 +44,6 @@ jobs:
           echo "base sha:$basesha repo sha:$reposha"
           ${{ github.event.inputs.buildtype  == 'force' }} && echo "::set-output name=flag::true" || echo "building on change"
           [[ $reposha == *$basesha* ]] && echo "no changes" || echo "::set-output name=flag::true"
-          echo "::set-output name=flag::true"
 
   images:
     needs: compare
